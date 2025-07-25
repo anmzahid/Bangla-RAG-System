@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>📚 RAG Chatbot</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+</head>
+<body>
+    <div class="page-wrapper">
+        <div class="container">
+            <h1>📚 RAG Chatbot</h1>
+            <p class="mode-indicator">Current Mode: <strong>{{ mode }}</strong></p>
+
+            <form method="POST" class="query-form">
+                <input 
+                    type="text" 
+                    name="query" 
+                    placeholder="Type your question here..." 
+                    value="{{ query }}" 
+                    required 
+                    autofocus
+                    autocomplete="off"
+                />
+
+                <div class="mode-selection">
+                    <label>
+                        <input type="radio" name="mode" value="local" {% if selected_mode == 'local' %}checked{% endif %} />
+                        Use Local Ollama
+                    </label>
+                    <label>
+                        <input type="radio" name="mode" value="api" {% if selected_mode == 'api' %}checked{% endif %} />
+                        Use Together API
+                    </label>
+                </div>
+
+                <button type="submit" class="btn">Ask</button>
+            </form>
+
+            {% if answer %}
+            <div class="result">
+                <h2>Answer:</h2>
+                <p class="answer-text">{{ answer }}</p>
+
+                <div class="metrics">
+                    <div><strong>🔗 Relevance Score:</strong> {{ relevance }}</div>
+                    <div><strong>✅ Grounded:</strong> {{ groundedness }}</div>
+                </div>
+
+                <h3>📑 Retrieved Chunks:</h3>
+                <ul class="retrieved-list">
+                    {% for chunk in retrieved_chunks %}
+                    <li>{{ chunk }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>
